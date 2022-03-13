@@ -1,10 +1,11 @@
 use diesel::{Insertable, Queryable};
+use serde::Serialize;
 
 use super::schema::{category, product};
-use crate::scraper;
+use crate::scraping;
 
-#[derive(Queryable)]
-struct Category {
+#[derive(Queryable, Serialize)]
+pub struct Category {
     slug: String,
     name: String,
 }
@@ -16,8 +17,8 @@ pub struct NewCategory {
     name: String,
 }
 
-#[derive(Queryable)]
-struct Product {
+#[derive(Queryable, Serialize)]
+pub struct Product {
     slug: String,
     name: String,
     full_name: String,
@@ -43,8 +44,8 @@ pub struct NewProduct {
     category_slug: String,
 }
 
-impl From<&scraper::Category> for NewCategory {
-    fn from(category: &scraper::Category) -> Self {
+impl From<&scraping::Category> for NewCategory {
+    fn from(category: &scraping::Category) -> Self {
         NewCategory {
             slug: category.slug.clone(),
             name: category.name.clone(),
@@ -52,8 +53,8 @@ impl From<&scraper::Category> for NewCategory {
     }
 }
 
-impl From<&scraper::Product> for NewProduct {
-    fn from(product: &scraper::Product) -> Self {
+impl From<&scraping::Product> for NewProduct {
+    fn from(product: &scraping::Product) -> Self {
         NewProduct {
             slug: product.slug.clone(),
             name: product.name.clone(),

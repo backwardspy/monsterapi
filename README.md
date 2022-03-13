@@ -17,4 +17,28 @@ useful information the tool found in the site sources.
 
 ## api
 
-coming soon™
+```sh
+$ cargo run
+```
+
+### endpoints
+
+#### category list
+
+`GET /categories`
+
+#### category details
+
+`GET /categories/<slug>`
+
+#### products in category
+
+`GET /categories/<slug>/products`
+
+#### product list
+
+`GET /products`
+
+#### product details
+
+`GET /products/<slug>`

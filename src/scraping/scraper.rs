@@ -105,7 +105,7 @@ fn get_text(el: ElementRef) -> String {
         .join("")
         .trim()
         .to_owned()
-        .replace("\u{a0}", " ")
+        .replace('\u{a0}', " ")
 }
 
 pub fn download_products_index(output_dir: &Path) -> Result<PathBuf> {
@@ -224,7 +224,7 @@ pub fn parse_product_page(page_path: &Path, info: &ProductInfo) -> Result<Produc
     );
 
     let description = select!(detail_text, "p")
-        .map(|p| get_text(p))
+        .map(get_text)
         .filter(|s| !s.is_empty())
         .collect::<Vec<_>>()
         .join("\n");
@@ -246,10 +246,10 @@ pub fn parse_product_page(page_path: &Path, info: &ProductInfo) -> Result<Produc
         slug: info.slug.clone(),
         category_slug: info.category_slug.clone(),
         name: info.name.clone(),
-        full_name: full_name,
-        description: description,
-        tagline: tagline,
-        flavour_profile: flavour_profile,
+        full_name,
+        description,
+        tagline,
+        flavour_profile,
         icon_url: icon_img_src,
         showcase_image_url: showcase_img_src,
     })
