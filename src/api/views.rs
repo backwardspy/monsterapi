@@ -1,10 +1,10 @@
 use diesel::prelude::*;
-use rocket::response::Debug;
-use rocket::serde::json::Json;
+use rocket::{get, response::Debug, serde::json::Json};
 
-use crate::database::models::{Category, Product};
-use crate::database::schema::category::dsl::*;
-use crate::database::schema::product::dsl::*;
+use crate::database::{
+    models::{Category, Product},
+    schema::{category::dsl::*, product::dsl::*},
+};
 
 use super::DBConn;
 
