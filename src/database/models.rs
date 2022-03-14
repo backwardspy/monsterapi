@@ -1,5 +1,5 @@
 use diesel::{Insertable, Queryable};
-use serde::Serialize;
+use rocket::serde::Serialize;
 
 use super::schema::{category, product};
 use crate::scraping;

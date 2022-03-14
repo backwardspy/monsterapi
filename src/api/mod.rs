@@ -1,9 +1,7 @@
 use diesel::SqliteConnection;
-use rocket_contrib::database;
+use rocket_sync_db_pools::database;
 
-mod app;
-mod views;
-pub use app::launch;
+pub mod views;
 
 #[database("db")]
 pub struct DBConn(SqliteConnection);

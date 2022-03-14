@@ -1,12 +1,14 @@
+use diesel::prelude::*;
+use rocket::response::Debug;
+use rocket::serde::json::Json;
+
 use crate::database::models::{Category, Product};
 use crate::database::schema::category::dsl::*;
 use crate::database::schema::product::dsl::*;
-use diesel::prelude::*;
-use rocket_contrib::json::Json;
-
-use crate::Result;
 
 use super::DBConn;
+
+type Result<T, E = Debug<diesel::result::Error>> = std::result::Result<T, E>;
 
 #[get("/")]
 pub fn index() -> &'static str {
@@ -14,30 +16,41 @@ pub fn index() -> &'static str {
 }
 
 #[get("/categories")]
-pub fn category_list(conn: DBConn) -> Result<Json<Vec<Category>>> {
-    Ok(Json(category.load::<Category>(&*conn)?))
+pub async fn category_list(db: DBConn) -> Result<Json<Vec<Category>>> {
+    let results = db.run(move |conn| category.load::<Category>(conn)).await?;
+    Ok(Json(results))
 }
 
 #[get("/categories/<pk>")]
-pub fn category_detail(conn: DBConn, pk: String) -> Result<Option<Json<Category>>> {
-    Ok(category.find(pk).load::<Category>(&*conn)?.pop().map(Json))
+pub async fn category_detail(db: DBConn, pk: String) -> Result<Option<Json<Category>>> {
+    let result = db
+        .run(move |conn| category.find(pk).load::<Category>(conn))
+        .await?
+        .pop()
+        .map(Json);
+    Ok(result)
 }
 
 #[get("/categories/<pk>/products")]
-pub fn category_products_list(conn: DBConn, pk: String) -> Result<Json<Vec<Product>>> {
-    Ok(Json(
-        product
-            .filter(category_slug.eq(pk))
-            .load::<Product>(&*conn)?,
-    ))
+pub async fn category_products_list(db: DBConn, pk: String) -> Result<Json<Vec<Product>>> {
+    let results = db
+        .run(move |conn| product.filter(category_slug.eq(pk)).load::<Product>(conn))
+        .await?;
+    Ok(Json(results))
 }
 
 #[get("/products")]
-pub fn product_list(conn: DBConn) -> Result<Json<Vec<Product>>> {
-    Ok(Json(product.load::<Product>(&*conn)?))
+pub async fn product_list(db: DBConn) -> Result<Json<Vec<Product>>> {
+    let results = db.run(move |conn| product.load::<Product>(conn)).await?;
+    Ok(Json(results))
 }
 
 #[get("/products/<pk>")]
-pub fn product_detail(conn: DBConn, pk: String) -> Result<Option<Json<Product>>> {
-    Ok(product.find(pk).load::<Product>(&*conn)?.pop().map(Json))
+pub async fn product_detail(db: DBConn, pk: String) -> Result<Option<Json<Product>>> {
+    let result = db
+        .run(move |conn| product.find(pk).load::<Product>(conn))
+        .await?
+        .pop()
+        .map(Json);
+    Ok(result)
 }
